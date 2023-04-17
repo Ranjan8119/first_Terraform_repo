@@ -1,0 +1,155 @@
+{
+    "executionRoleArn": "arn:aws:iam::802265616314:role/ECS-Service-Task-Role",
+    "containerDefinitions": [
+      {
+        "portMappings": [],
+        "cpu": 0,
+        "environment": [],
+        "mountPoints": [],
+        "memory": 100,
+        "volumesFrom": [],
+        "image": "802265616314.dkr.ecr.ap-south-1.amazonaws.com/aws-for-fluent-bit:latest",
+        "firelensConfiguration": {
+          "type": "fluentbit",
+          "options": {
+            "enable-ecs-log-metadata": "true"
+          }
+        },
+        "essential": true,
+        "user": "0",
+        "name": "log_router_dd"
+      },
+      {
+        "logConfiguration": {
+          "logDriver": "awsfirelens",
+          "options": {
+            "Name": "datadog",
+            "apikey": "4e033f05794cdc58aa68f6e7f6ca4e1f",
+            "Host": "http-intake.logs.datadoghq.com",
+            "dd_service": "c2b-sale-token-service-prod",
+            "dd_source": "c2b-sale-token-service-prod",
+            "dd_message_key": "log",
+            "dd_env" : "prod",
+            "dd_tags": "project:fluentbit",
+            "TLS": "on",
+            "provider": "ecs"
+          }
+        },
+        "portMappings": [
+          {
+            "hostPort": 8080,
+            "protocol": "tcp",
+            "containerPort": 8080
+          }
+        ],
+        "cpu": 1014,
+        "environment": [
+          {
+            "name": "JAR",
+            "value": "JAR_VERSION"
+          },
+          {
+            "name": "ENV",
+            "value": "prod",
+            "value": "ENVT"
+          },
+          {
+           "name": "DB_HOST",
+            "value": "jdbc:mysql://admin-panel-production.cdw6436kfgnj.ap-south-1.rds.amazonaws.com:3306/c2b_sale_token_prod?useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false"
+          },
+          {
+            "name": "DB_USER",
+            "value": "c2b_sale_token_user"
+          },
+          {
+            "name": "DB_PASSWORD",
+            "value": "dIHoL8n753LqsJvE"
+          },
+          
+          {
+            "name": "RABBIT_MQ_HOST",
+            "value": "small-crab.rmq.cloudamqp.com"
+          },
+          {
+            "name": "RABBIT_MQ_VHOST",
+            "value": "vbrrnnbv"
+          },
+          {
+            "name": "RABBIT_MQ_PORT",
+            "value": "5672"
+          },
+          {
+            "name": "RABBIT_MQ_USER",
+            "value": "vbrrnnbv"
+          },
+          {
+            "name": "RABBIT_MQ_PASSWORD",
+            "value": "UbUT1db2pf_QdSt-0ql_ME4Y4giNE0yn"
+          },
+          
+          {
+            "name": "API_ACCESS_TOKEN",
+            "value": "aPdSgVkYp3s6v9y$B&E)H+MbQeThWmZq"
+          }
+        ],
+        "mountPoints": [],
+        "memory": 2048,
+        "memoryReservation": 1024,
+        "volumesFrom": [],
+        "image": "802265616314.dkr.ecr.ap-south-1.amazonaws.com/oms-sales-service:IMG_TAG",
+        "healthCheck": {
+          "retries": 10,
+          "command": [
+            "CMD-SHELL",
+            "curl -f http://localhost:8080/public/health"
+          ],
+          "timeout": 10,
+          "interval": 120,
+          "startPeriod": 300
+        },
+        "essential": true,
+        "name": "c2b-sale-token-service-prod"
+      },
+      {
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "datadog-prod",
+            "awslogs-region": "ap-south-1",
+            "awslogs-stream-prefix": "datadog-prod"
+          }
+        },
+        "cpu": 10,
+        "environment": [
+          {
+            "name": "DD_API_KEY",
+            "value": "4e033f05794cdc58aa68f6e7f6ca4e1f"
+          },
+          {
+            "name": "ECS_FARGATE",
+            "value": "true"
+          },
+          {
+            "name": "DD_APM_ENABLED",
+            "value": "true"
+          }
+        ],
+        "mountPoints": [],
+        "memoryReservation": 256,
+        "volumesFrom": [],
+        "image": "datadog/agent:latest",
+        "essential": true,
+        "name": "datadog-agent"
+      }
+    ],
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "placementConstraints": [],
+    "memory": "2048",
+    "taskRoleArn": "arn:aws:iam::802265616314:role/ECS-Service-Task-Role",
+    "family": "c2b-sale-token-service-prod",
+    "networkMode": "awsvpc",
+    "cpu": "1024",
+    "volumes": []
+  }
